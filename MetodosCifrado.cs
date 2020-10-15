@@ -100,6 +100,9 @@ namespace ejemplo_cifrado_aes256
             string resultado_b64 = Convert.ToBase64String(entrada);
             resultado_b64 = resultado_b64.Replace('+', '-').Replace('/', '_');
 
+            // Si hay padding al final con "=", lo podemos quitar para que no interfiera en la URL.
+            resultado_b64 = resultado_b64.Replace("=", "");
+
             return resultado_b64;
         }
 
@@ -107,6 +110,14 @@ namespace ejemplo_cifrado_aes256
         {
             // Convierte un string Base64 URL-safe a un array de bytes
             string resultado_texto = entrada.Replace('_', '/').Replace('-', '+');
+
+            // Reagregamos padding según sea necesario, ya que lo quitamos en el encoding
+            if ((resultado_texto.Length % 4) > 0)
+            {
+                string padding = new String('=', 4 - (resultado_texto.Length % 4));
+                resultado_texto = resultado_texto + padding;
+            }
+
             byte[] resultado_bytes = Convert.FromBase64String(resultado_texto);
 
             return resultado_bytes;
