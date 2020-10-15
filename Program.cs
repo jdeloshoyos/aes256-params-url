@@ -21,7 +21,7 @@ namespace ejemplo_cifrado_aes256
 
             string payload_cifrado = MetodosCifrado.EncriptaParametros(payload, secreto);
             Console.WriteLine("Payload cifrado: " + payload_cifrado);
-            Console.WriteLine("Ejemplo de URL: http://adara01:8888/modulab/servlet/GetPDFReportNoRedirectServlet?params=" + payload_cifrado);
+            Console.WriteLine("Ejemplo de URL: http://miservidor.com/ruta/metodo?params=" + payload_cifrado);
             Console.WriteLine("\nPASO 2. DESCIFRADO DEL PAYLOAD\n");
 
             string payload_descifrado = MetodosCifrado.DecriptaParametros(payload_cifrado, secreto);
