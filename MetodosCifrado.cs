@@ -27,13 +27,10 @@ namespace ejemplo_cifrado_aes256
             }
 
             // Encodeamos la data cifrada en Base64
-            string resultado = Convert.ToBase64String(payload_cifrado);
-            // Convertimos Base64 a una versión URL-safe
-            resultado = resultado.Replace('+', '-').Replace('/', '_');
+            string resultado = BytesABase64(payload_cifrado);
 
             // Lo mismo con el vector de inicialización. Lo tenemos que adjuntar al texto cifrado, para ser usado por el descifrado.
-            string iv_b64 = Convert.ToBase64String(iv);
-            iv_b64 = iv_b64.Replace('+', '-').Replace('/', '_');
+            string iv_b64 = BytesABase64(iv);
 
             return iv_b64 + "." + resultado;
         }
@@ -52,12 +49,10 @@ namespace ejemplo_cifrado_aes256
             string[] payload_partes = payload.Split(".");
 
             // Vector de inicialización
-            string iv = payload_partes[0].Replace('_', '/').Replace('-', '+');
-            byte[] iv_bytes = Convert.FromBase64String(iv);
+            byte[] iv_bytes = Base64ABytes(payload_partes[0]);
 
             // Payload propiamente tal
-            string payload_texto = payload_partes[1].Replace('_', '/').Replace('-', '+');
-            byte[] payload_bytes = Convert.FromBase64String(payload_texto);
+            byte[] payload_bytes = Base64ABytes(payload_partes[1]);
 
             // Decriptamos con AES-256 el payload cifrado
             string resultado;
@@ -98,6 +93,25 @@ namespace ejemplo_cifrado_aes256
 
             return resultado;
         }
+
+        private static string BytesABase64(byte[] entrada)
+        {
+            // Convierte un array de bytes a un string Base64 URL-safe
+            string resultado_b64 = Convert.ToBase64String(entrada);
+            resultado_b64 = resultado_b64.Replace('+', '-').Replace('/', '_');
+
+            return resultado_b64;
+        }
+
+        private static byte[] Base64ABytes(string entrada)
+        {
+            // Convierte un string Base64 URL-safe a un array de bytes
+            string resultado_texto = entrada.Replace('_', '/').Replace('-', '+');
+            byte[] resultado_bytes = Convert.FromBase64String(resultado_texto);
+
+            return resultado_bytes;
+        }
+
 
         /********************************
          * CIFRADO Y DESCIFRADO AES-256 *
